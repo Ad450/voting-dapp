@@ -2,11 +2,13 @@
 pragma solidity >=0.4.0 <0.9.0;
 
 contract TaxCollector {
-    uint256 tax;
+    uint256 tax = 200;
     uint256 taxRevenue;
     address payable owner;
 
     constructor () public{ owner = msg.sender; }
+
+    mapping (address=> uint256) accountBalance;
 
     modifier onlyBy {
         require(
@@ -17,6 +19,7 @@ contract TaxCollector {
     }
 
     function pay(address taxPayer) public onlyBy payable returns (uint){
-
+        accountBalance[taxPayer] = tax - accountBalance[taxPayer];
+        return accountBalance[taxPayer];
     }
 }
