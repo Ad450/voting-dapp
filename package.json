@@ -1,0 +1,11 @@
+{
+  "name": "solidity-beginner",
+  "version": "1.0.0",
+  "description": "\"starting solidity\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Emmanuel",
+  "license": "ISC"
+}
