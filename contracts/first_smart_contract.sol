@@ -10,6 +10,12 @@ contract TaxCollector {
 
     mapping (address=> uint256) accountBalance;
 
+    struct Collectors{
+        string name;
+       string gender;
+        uint age;
+    }
+
     modifier onlyBy {
         require(
             owner == msg.sender, 
