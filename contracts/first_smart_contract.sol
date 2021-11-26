@@ -28,4 +28,8 @@ contract TaxCollector {
         accountBalance[taxPayer] = tax - accountBalance[taxPayer];
         return accountBalance[taxPayer];
     }
+
+    function reaminingAmount() public returns (uint){
+       return pay(owner);
+    }
 }
