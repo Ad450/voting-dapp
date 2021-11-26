@@ -1,35 +1,48 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity >=0.4.0 <0.9.0;
 
-contract TaxCollector {
-    uint256 tax = 200;
-    uint256 taxRevenue;
-    address payable owner;
+contract Voting {
+    uint256  teamA=0;
+    uint256 teamB= 0;
+    uint256 teamC = 0;
+    address voter;
 
-    constructor () public{ owner = msg.sender; }
+    mapping(address=> uint) eligibility;
 
-    mapping (address=> uint256) accountBalance;
-
-    struct Collectors{
-        string name;
-       string gender;
-        uint age;
+    constructor () public {
+        voter = msg.sender;
     }
 
-    modifier onlyBy {
-        require(
-            owner == msg.sender, 
-        "only owner can call this function"
-        );
+    modifier onlyEligible{
+        require(eligibility[voter] == 0, "you can vote only once");
         _;
     }
 
-    function pay(address taxPayer) public onlyBy payable returns (uint){
-        accountBalance[taxPayer] = tax - accountBalance[taxPayer];
-        return accountBalance[taxPayer];
+    function voteForA()  private onlyEligible returns (uint){
+        uint votes = teamA + 1;
+        eligibility[voter] = 1;
+       return votes;
     }
 
-    function reaminingAmount() public returns (uint){
-       return pay(owner);
+    function voteForB() private onlyEligible returns (uint){
+        uint votes = teamB + 1;
+        eligibility[voter] = 1;
+        return votes;
+    }
+
+    function voteForC() private onlyEligible returns (uint){
+         uint votes = teamC + 1;
+        eligibility[voter] = 1;
+        return votes;
+    }
+
+    function returnA() public  returns (uint){
+       return voteForA();
+    }
+    function returnB() public   returns (uint){
+       return voteForB();
+    }
+    function returnC() public  returns (uint){
+       return voteForC();
     }
 }
