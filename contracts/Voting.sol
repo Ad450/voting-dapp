@@ -7,14 +7,14 @@ contract Voter{
 
     // make sure the voter is actually the bearer of the account 
     // just like checking the voterID of a person before voting
-   constructor() {
+   constructor()public {
        voter = msg.sender;
    }
     // create an event that will be listened to on the frontend when a user votes and when a user tries to overvote
     event Voted(address who);
 
    // create an error that will be sent to potential voter when overvoting is tried
-    error OverVoting (string message);
+   // error OverVoting (string message);
 
     // vote modifier checks if address (voter) has already voted 
     mapping (address => uint16) private count;
@@ -28,10 +28,13 @@ contract Voter{
 
     // vote function to carry out voting
 
-    function vote() canVote public view{
+    function vote() canVote public {
         // further checks for overvoting
         if(count[voter] == 0){
             count[voter] + 1;
+            emit Voted(voter);
+        }else{
+            revert ( 'You have already voted. Thank you');
         }
     }
 
