@@ -2,6 +2,7 @@
 pragma solidity >=0.4.0 <0.9.0;
 
 contract ElectoralCommission{
+
     // declare a voter object which contains the information of each citizen 
    struct Voter{
        address voterId;
@@ -18,6 +19,7 @@ contract ElectoralCommission{
    struct Party{
        uint totalVotes;
    }
+
    // various parties involved in the election
    Party partyA;
    Party partB;
@@ -90,7 +92,7 @@ contract ElectoralCommission{
     } 
 
 
-     // all verified voters can vote
+    // all verified voters can vote
     function voteForPartyB() private verifyVoter {
         if(!triggerVoteCountError){
 
@@ -114,7 +116,7 @@ contract ElectoralCommission{
     } 
 
 
-     // all verified voters can vote
+    // all verified voters can vote
     function voteForPartyC() private verifyVoter {
         if(!triggerVoteCountError){
 
