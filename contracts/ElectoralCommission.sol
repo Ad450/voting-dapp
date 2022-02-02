@@ -5,19 +5,19 @@ contract ElectoralCommission{
 
     // declare a voter object which contains the information of each citizen 
    struct Voter{
-       address voterId;
-       uint vote;
-       bool hasVoted;
+       address immutable voterId;
+       uint immutable vote;
+       bool immutable hasVoted;
    }
 
    // declare a ballot object that contains the number of votes in the election process
    struct BallotBox{
-       uint voteCount;
+       uint immutable voteCount;
    }
 
   // party object
    struct Party{
-       uint totalVotes;
+       uint immutable totalVotes;
    }
 
    // various parties involved in the election
@@ -33,7 +33,7 @@ contract ElectoralCommission{
 
    // events to used by the UI
    // this emits the voted event containing the address of the voter
-   event Voted(address who);
+   event Voted(address who,);
 
     // creating our one object of voter and ballotBox
      Voter voter;
@@ -56,20 +56,13 @@ contract ElectoralCommission{
         return ballotBox.voteCount;        
     }
 
-    function getPartAVotes() public view returns (uint){
-        return ballotBox.voteCount;        
+    function getPartyVotes(Party _party) public view returns (uint){
+        return partyVotes[_party]       
     }
 
-    function getPartBVotes() public view returns (uint){
-        return ballotBox.voteCount;        
-    }
-
-    function getPartCVotes() public view returns (uint){
-        return ballotBox.voteCount;        
-    }
 
     // all verified voters can vote
-    function voteForPartyA() private verifyVoter {
+    function voteForPartyA(Party _party) private verifyVoter {
         if(!triggerVoteCountError){
 
         // update the voter info
@@ -77,8 +70,9 @@ contract ElectoralCommission{
         voter.hasVoted = true;
 
         //update party total votes
-        partyVotes[partyC] =+ 1;
+        partyVotes[_party] =+ 1;
         
+        // set voteCountError to true to be able to revert network if voter tries to vote again
         triggerVoteCountError = true;
 
         // increase the votes in the ballotBox
@@ -92,52 +86,7 @@ contract ElectoralCommission{
     } 
 
 
-    // all verified voters can vote
-    function voteForPartyB() private verifyVoter {
-        if(!triggerVoteCountError){
-
-        // update the voter info
-        voter.vote = 1;
-        voter.hasVoted = true;
-
-        //update party total votes
-        partyVotes[partyC] =+ 1;
-
-        triggerVoteCountError = true;
-
-        // increase the votes in the ballotBox
-        ballotBox.voteCount += 1;
-
-        emit Voted({who: voter.voterId});
-        }else{
-            revert('Can vote only once');
-        }
-        
-    } 
-
-
-    // all verified voters can vote
-    function voteForPartyC() private verifyVoter {
-        if(!triggerVoteCountError){
-
-        // update the voter info
-        voter.vote = 1;
-        voter.hasVoted = true;
-
-        //update party total votes
-        partyVotes[partyC] =+ 1;
-
-        triggerVoteCountError = true;
-
-        // increase the votes in the ballotBox
-        ballotBox.voteCount += 1;
-
-        emit Voted({who: voter.voterId});
-        }else{
-            revert('Can vote only once');
-        }
-        
-    } 
+   
 
 }
 
@@ -172,5 +121,7 @@ contract ElectoralCommission{
  ......................
  the electoral commission contract will have three objects to keep track of
  the voter, the number of in the ballot box
+
+
 
   **/
