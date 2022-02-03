@@ -28,12 +28,12 @@ contract ElectoralCommission{
    // map all parties to corresponding votes
    mapping  (Party => uint) partyVotes; 
 
-  // to control the number of times a user votes 
-   bool private triggerVoteCountError; 
+   // hasAlreadyVotedError will be thrown when user tries to vote again
+   error HasAlreadyVotedError (address who);
 
    // events to used by the UI
    // this emits the voted event containing the address of the voter
-   event Voted(address who,);
+   event Voted(address who, string message);
 
     // creating our one object of voter and ballotBox
      Voter voter;
@@ -62,14 +62,14 @@ contract ElectoralCommission{
 
 
     // all verified voters can vote
-    function voteForPartyA(Party _party) private verifyVoter {
+    function voteForParty(Party _party) private verifyVoter {
         if(!triggerVoteCountError){
 
         // update the voter info
         voter.vote = 1;
         voter.hasVoted = true;
 
-        //update party total votes
+        //increase the party total votest by one
         partyVotes[_party] =+ 1;
         
         // set voteCountError to true to be able to revert network if voter tries to vote again
@@ -80,18 +80,12 @@ contract ElectoralCommission{
 
         emit Voted({who: voter.voterId});
         }else{
-            revert('Can vote only once');
+            revert HasAlreadyVotedError({who : voter.adress, message : "You have already voted, thank you" });
         }
         
     } 
 
-
-   
-
 }
-
-
-
 
 
 
@@ -121,7 +115,5 @@ contract ElectoralCommission{
  ......................
  the electoral commission contract will have three objects to keep track of
  the voter, the number of in the ballot box
-
-
 
   **/
