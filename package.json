@@ -17,5 +17,8 @@
     "nodemon": "^2.0.15",
     "truffle": "^5.4.22",
     "truffle-contract": "^4.0.31"
+  },
+  "dependencies": {
+    "express": "^4.17.2"
   }
 }
