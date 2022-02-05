@@ -4,6 +4,7 @@
   "description": "\"starting solidity\"",
   "main": "index.js",
   "scripts": {
+    "start" : "./app/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Emmanuel",
@@ -17,8 +18,5 @@
     "nodemon": "^2.0.15",
     "truffle": "^5.4.22",
     "truffle-contract": "^4.0.31"
-  },
-  "dependencies": {
-    "express": "^4.17.2"
   }
 }
