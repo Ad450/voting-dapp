@@ -58,5 +58,18 @@ const voteForParty = async(party)=>{
 }
 
 
+const getTotalVotes = async()=>{
+    const electoralCommission = await initContract();
+    try {       
+       const result = await electoralCommission.methods.getTotalVoteCast().call();
+       console.log(result);
+       
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
 //voteForParty('A');
 getPartyVotes('A');
+getTotalVotes();
