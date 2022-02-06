@@ -5,17 +5,18 @@ const Web3 = require ('web3');
 // the abi exposes all the functions and variables we can communicate with in the contract
 const contractJSON = require('../build/contracts/ElectoralCommission.json');
 
+const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+
 // abi
 const initContract = async()=>{
 
     const abi = contractJSON.abi;
     
-    const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+    // create an instance of web3 passing in a provider
     // to get address from network
     const id = await web3.eth.net.getId();
     const address = contractJSON.networks[id].address;
-    
-    // create an instance of web3 passing in a provider
+
     
    // console.log(web3);
 
@@ -24,6 +25,8 @@ const initContract = async()=>{
 }
 
 initContract();
+
+// get votes of a party
 
 const getPartyVotes = async(party)=>{
     const electoralCommission = await initContract();
@@ -37,4 +40,23 @@ const getPartyVotes = async(party)=>{
     }
 }
 
+getPartyVotes('A');
+
+// vote for a party
+
+const voteForParty = async(party)=>{
+    const electoralCommission = await initContract();
+    try {
+        // get first address in ganache
+        const addresses = await web3.eth.getAccounts();
+
+        // call voteForParty in the contract
+        const result = await electoralCommission.methods.voteForParty(party).send({from :addresses[0] ,gas:3000000 });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+voteForParty('A');
 getPartyVotes('A');
