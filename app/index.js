@@ -40,7 +40,7 @@ const getPartyVotes = async(party)=>{
     }
 }
 
-getPartyVotes('A');
+//getPartyVotes('A');
 
 // vote for a party
 
@@ -58,5 +58,5 @@ const voteForParty = async(party)=>{
 }
 
 
-voteForParty('A');
+//voteForParty('A');
 getPartyVotes('A');
