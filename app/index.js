@@ -9,7 +9,7 @@ const web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
 
 // abi
 const initContract = async()=>{
-
+    
     const abi = contractJSON.abi;
     
     // create an instance of web3 passing in a provider
@@ -23,8 +23,6 @@ const initContract = async()=>{
     const contract = new web3.eth.Contract(abi, address);
     return contract;
 }
-
-initContract();
 
 // get votes of a party
 
