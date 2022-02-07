@@ -1,7 +1,7 @@
 // require web3 into the project
 const Web3 = require ('web3');
 
-// require ElectoralCommission contract abi into app.js
+// require ElectoralCommission contract ABI into app.js
 // the abi exposes all the functions and variables we can communicate with in the contract
 const contractJSON = require('../build/contracts/ElectoralCommission.json');
 

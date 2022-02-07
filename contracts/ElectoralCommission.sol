@@ -1,36 +1,56 @@
-pragma solidity ^0.5.16;
+pragma solidity ^0.8.11;
+
 // SPDX-License-Identifier: GPL-3.0
 
 
-contract ElectoralCommission {
-
-    address public owner;
-
-    // declare a voter object which contains the information of each citizen 
-    struct Voter {
+// this is the interface of the electoral commission contract
+abstract contract EC {
+     struct Voter {
         address voterId;
         uint vote;
         bool hasVoted;
     }
 
-   // declare a ballot object that contains the number of votes in the election process
     struct BallotBox {
         uint voteCount;
     }
 
+    Voter private voter;
+
+
+    // ensure the voter is the caller of this contract
+    modifier verifyVoter {
+       require(!(voter.hasVoted) && voter.voterId == msg.sender && voter.vote == 0);
+       _;
+   }
+    function getPartyVotes(string memory _party) public virtual view returns(uint);
+    function getTotalVoteCast() public virtual view returns (uint);
+    function voteForParty(string memory _party) virtual external;
+}
+
+contract GeneralElection is EC {
+
+    address public owner;
+
+    // declare a voter object which contains the information of each citizen 
+   
+
+    // declare a ballot object that contains the number of votes in the election process
+    
+
    // various parties involved in the election
    // hard coded parties for testing
-    string public partyA;
-    string public partyB;
-    string public partyC;
+    string private partyA;
+    string private partyB;
+    string private partyC;
 
    // map all parties to corresponding votes
-    mapping (string => uint) public partyVotes; 
+    mapping (string => uint) private partyVotes; 
 
    // hasAlreadyVotedError will be thrown when user triespublic to vote again
 
     //error HasAlreadyVotedError (string message);
-    bool public triggerVoteCountError = false;
+    bool private triggerVoteCountError = false;
 
    // events to used by the UI
    // this emits the voted event containing the address of the voter
@@ -38,38 +58,35 @@ contract ElectoralCommission {
     
 
     // creating our one object of voter and ballotBox
-    Voter public voter;
-    BallotBox public ballotBox;
+    Voter private voter;
+    BallotBox  private  ballotBox;
 
    // ensure the address calling this smart contract is the voter
    // set vote and hasVoted as seen below
-    constructor () public{
+    constructor (){
         voter =  Voter({voterId : msg.sender, vote : 0, hasVoted:false});
         // hard coded parties for testing
         partyA = 'A';
         partyB = 'B';
         partyC = 'C';
+        ballotBox = BallotBox({voteCount : 0});
 }
 
-// ensure the voter is the caller of this contract
-    modifier verifyVoter{
-       require(!(voter.hasVoted) && voter.voterId == msg.sender && voter.vote == 0);
-       _;
-   }
+
 
     // read total votes in election 
-    function getTotalVoteCast() public view returns (uint){
+    function getTotalVoteCast() public virtual override view returns (uint){
         return ballotBox.voteCount;        
     }
 
     // read total votes of a party
-    function getPartyVotes(string memory _party) public view returns (uint){
+    function getPartyVotes(string memory _party) public virtual override view returns (uint){
         return partyVotes[_party];     
     }
 
 
     // all verified voters can vote
-    function voteForParty(string memory _party) public verifyVoter {
+    function voteForParty(string memory _party) virtual override external verifyVoter {
         if(!triggerVoteCountError){
 
         // update the voter info
@@ -91,6 +108,8 @@ contract ElectoralCommission {
         }
         
     } 
+    
 
 }
+
 
