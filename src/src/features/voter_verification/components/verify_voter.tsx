@@ -9,30 +9,53 @@ import {
   HStack,
   Box,
   Button,
+  CircularProgress,
 } from "@chakra-ui/react";
 import { useState } from "react";
 
 const VerifyVoter = () => {
   const [value, setValue] = useState("");
+  const [isVerifyCode, setIsVerifyCode] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const isError = value === "";
+  const handleOnChange = (e: any) => setValue(e.target.value);
 
   return (
     <Box width="container.xl">
       <Stack>
-        <FormControl isInvalid={isError}>
+        <FormControl>
           <FormLabel htmlFor="email">Email address</FormLabel>
-          <Input id="email" type="email" value={value} />
+          <Input
+            id="email"
+            type="email"
+            value={value}
+            onChange={handleOnChange}
+          />
           <FormHelperText>We'll never share your email.</FormHelperText>
         </FormControl>
         <CustomPinField></CustomPinField>
-        {
+        {!loading ? (
           // will replace sent Otp with verify otp once the user has received the otp
-
-          <Button colorScheme="red" variant="outline">
-            Send Otp
-          </Button>
-        }
+          isVerifyCode ? (
+            <Button
+              colorScheme="red"
+              variant="outline"
+              onClick={performOperation}
+            >
+              Verify code
+            </Button>
+          ) : (
+            <Button
+              colorScheme="red"
+              variant="outline"
+              onClick={performOperation}
+            >
+              Send code
+            </Button>
+          )
+        ) : (
+          <CircularProgress value={30} color="orange.400" thickness="12px" />
+        )}
       </Stack>
     </Box>
   );
@@ -64,3 +87,12 @@ const performOperation = async () => {
 const getVerificationCode = async (email: string): Promise<void> => {};
 
 export { VerifyVoter };
+
+// get verification code
+// https://uenrlibrary.herokuapp.com/api/auth/resend-verification-link
+
+// verify code
+// https://uenrlibrary.herokuapp.com/api/auth/email-verify/$code/$email
+
+// figure out
+// should disable button when loading
