@@ -1,7 +1,7 @@
 
 interface NetworkService{
-     get(url:string , data:any):Promise<{data:string, value:any}>;
-     post(url:string, data:any):Promise<{data:string, value:any}>;
+     get(url:string , data:any):Promise<{data: any}>;
+     post(url:string, data:any):Promise<{data:any}>;
 }
 
 export default NetworkService;
