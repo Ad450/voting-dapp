@@ -12,7 +12,7 @@ enum ApiErrors {
   }
 
 
-class AppStrings{
+abstract class AppStrings{
     
    static apiNoResponse: string = 'no response from the server, try again';
    static apiUnauthorized: string = "you are not authorize to perform this operation";
