@@ -10,14 +10,19 @@ import {
   Box,
   Button,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 const VerifyVoter = () => {
+  const [value, setValue] = useState("");
+
+  const isError = value === "";
+
   return (
     <Box width="container.xl">
       <Stack>
-        <FormControl>
+        <FormControl isInvalid={isError}>
           <FormLabel htmlFor="email">Email address</FormLabel>
-          <Input id="email" type="email" />
+          <Input id="email" type="email" value={value} />
           <FormHelperText>We'll never share your email.</FormHelperText>
         </FormControl>
         <CustomPinField></CustomPinField>
@@ -37,7 +42,7 @@ const CustomPinField = () => {
   return (
     <HStack>
       <Box paddingTop="30">
-        <PinInput otp onComplete={performVerification}>
+        <PinInput otp onComplete={performOperation}>
           <PinInputField />
           <PinInputField />
           <PinInputField />
@@ -51,5 +56,11 @@ const CustomPinField = () => {
 };
 
 // this will verify pin
-const performVerification = () => {};
+const performOperation = async () => {
+  try {
+  } catch (error) {}
+};
+
+const getVerificationCode = async (email: string): Promise<void> => {};
+
 export { VerifyVoter };
