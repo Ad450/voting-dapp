@@ -2,8 +2,9 @@
 
 # dependencies
 
-src
-smart_contracts
+
+
+node_modules
 /.pnp
 .pnp.js
 *.zip

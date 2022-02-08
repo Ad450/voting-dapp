@@ -1,0 +1,22 @@
+{
+  "name": "solidity-beginner",
+  "version": "1.0.0",
+  "description": "\"starting solidity\"",
+  "main": "index.js",
+  "scripts": {
+    "start" : "./app/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Emmanuel",
+  "license": "ISC",
+  "devDependencies": {
+    "bootstrap": "^5.1.3",
+    "chai": "^4.1.4",
+    "chai-as-promised": "^7.1.1",
+    "chai-bignumber": "^2.0.2",
+    "lite-server": "^2.3.0",
+    "nodemon": "^2.0.15",
+    "truffle": "^5.4.22",
+    "truffle-contract": "^4.0.31"
+  }
+}
