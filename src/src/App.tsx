@@ -1,12 +1,5 @@
 import * as React from "react";
-import {
-  ChakraProvider,
-  Box,
-  theme,
-  Square,
-  Heading,
-  VStack,
-} from "@chakra-ui/react";
+import { ChakraProvider, Box, theme, Heading, VStack } from "@chakra-ui/react";
 import { VerifyVoter } from "./features/voter_verification/components/verify_voter";
 
 export const App = () => (
@@ -19,9 +12,7 @@ export const App = () => (
             Let's Verify your Email!!{" "}
           </Heading>
           <Box paddingTop="100">
-            <Square minWidth="container.sm">
-              <VerifyVoter></VerifyVoter>
-            </Square>
+            <VerifyVoter></VerifyVoter>
           </Box>
         </VStack>
       </Box>
