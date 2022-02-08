@@ -13,21 +13,23 @@ import {
 
 const VerifyVoter = () => {
   return (
-    <Stack>
-      <FormControl>
-        <FormLabel htmlFor="email">Email address</FormLabel>
-        <Input id="email" type="email" />
-        <FormHelperText>We'll never share your email.</FormHelperText>
-      </FormControl>
-      <CustomPinField></CustomPinField>
-      {
-        // will replace sent Otp with verify otp once the user has received the otp
+    <Box width="container.xl">
+      <Stack>
+        <FormControl>
+          <FormLabel htmlFor="email">Email address</FormLabel>
+          <Input id="email" type="email" />
+          <FormHelperText>We'll never share your email.</FormHelperText>
+        </FormControl>
+        <CustomPinField></CustomPinField>
+        {
+          // will replace sent Otp with verify otp once the user has received the otp
 
-        <Button colorScheme="red" variant="outline">
-          Send Otp
-        </Button>
-      }
-    </Stack>
+          <Button colorScheme="red" variant="outline">
+            Send Otp
+          </Button>
+        }
+      </Stack>
+    </Box>
   );
 };
 
