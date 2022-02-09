@@ -5,7 +5,7 @@ import {
   Input,
   PinInput,
   PinInputField,
-  Stack,
+  VStack,
   HStack,
   Box,
   Button,
@@ -14,6 +14,7 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { AppStrings, UIError } from "../../../core/failures";
+import Validator from "../../../core/utils/validators";
 import {
   verifyCode,
   getVerificationCode,
@@ -24,9 +25,11 @@ const VerifyVoter = () => {
   const [isVerifyCode, setIsVerifyCode] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [pin, setPin] = useState("");
   const handleOnChange = (e: any) => setEmail(e.target.value);
 
   const verifyOtp = async (code: string) => {
+    setLoading(true);
     try {
       await verifyCode(email, code);
     } catch (error: unknown) {
@@ -34,43 +37,71 @@ const VerifyVoter = () => {
         setError(error.message);
       } else {
         setError(AppStrings.apiGenericError);
+        setLoading(false);
       }
     }
   };
 
   const getOtp = async () => {
-    try {
-      await getVerificationCode(email);
-    } catch (error: unknown) {
-      if (error instanceof UIError) {
-        setError(error.message);
-      } else {
-        setError(AppStrings.apiGenericError);
+    if (Validator.validateEmail(email)) {
+      //debugging with prints for now
+      console.log("entered get otp");
+
+      setLoading(true);
+      try {
+        await getVerificationCode(email);
+        setIsVerifyCode(true);
+      } catch (error: unknown) {
+        if (error instanceof UIError) {
+          setError(error.message);
+        } else {
+          setError(AppStrings.apiGenericError);
+          setLoading(false);
+        }
       }
     }
   };
 
+  const onPinChange = async (value: string) => {
+    setPin(value);
+  };
+
   return (
     <Box width="container.xl">
-      <Stack>
-        <FormControl>
-          <FormLabel htmlFor="email">Email address</FormLabel>
-          <Input
-            id="email"
-            type="email"
-            value={email}
-            onChange={handleOnChange}
-          />
-          <FormHelperText>We'll never share your email.</FormHelperText>
-        </FormControl>
-        <CustomPinField onComplete={verifyOtp}></CustomPinField>
+      <VStack>
+        <Box width="fit-content">
+          <FormControl>
+            <FormLabel htmlFor="email">Email address</FormLabel>
+            <Input
+              id="email"
+              type="email"
+              value={email}
+              onChange={handleOnChange}
+            />
+            <FormHelperText>We'll never share your email.</FormHelperText>
+          </FormControl>
+        </Box>
+        <CustomPinField
+          onComplete={verifyOtp}
+          onChange={onPinChange}
+        ></CustomPinField>
         {!loading ? (
           // will replace sent Otp with verify otp once the user has received the otp
           isVerifyCode ? (
-            <Box></Box>
-          ) : (
-            <Button colorScheme="red" variant="outline" onClick={getOtp}>
+            <Button
+              colorScheme="red"
+              variant="outline"
+              onClick={() => verifyOtp(pin)}
+            >
               Send code
+            </Button>
+          ) : (
+            <Button
+              colorScheme="red"
+              variant="outline"
+              onClick={() => getOtp()}
+            >
+              VerifyCode
             </Button>
           )
         ) : (
@@ -78,7 +109,7 @@ const VerifyVoter = () => {
         )}
 
         <Text>{error}</Text>
-      </Stack>
+      </VStack>
     </Box>
   );
 };
@@ -87,7 +118,7 @@ const CustomPinField = (props: any) => {
   return (
     <HStack>
       <Box paddingTop="30">
-        <PinInput otp onComplete={props.onComplete}>
+        <PinInput otp onComplete={props.onComplete} onChange={props.onChange}>
           <PinInputField />
           <PinInputField />
           <PinInputField />
