@@ -23,7 +23,7 @@ class NetworkServiceImpl implements NetworkService{
         }
     }
 
-     _handleResponse (response: AxiosResponse) : Map<string, any>{
+   private  _handleResponse (response: AxiosResponse) : Map<string, any>{
         const result: Map<string, any> = new Map<string, any>();
 
         if((response.status /1 ) >= 200 && (response.status /1 ) <= 203 ){
