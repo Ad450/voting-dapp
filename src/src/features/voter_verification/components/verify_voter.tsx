@@ -11,6 +11,9 @@ import {
   Button,
   CircularProgress,
   Text,
+  Flex,
+  Heading,
+  useColorMode,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { AppStrings, UIError } from "../../../core/failures";
@@ -27,6 +30,7 @@ const VerifyVoter = () => {
   const [error, setError] = useState("");
   const [pin, setPin] = useState("");
   const handleOnChange = (e: any) => setEmail(e.target.value);
+  const { toggleColorMode } = useColorMode();
 
   const verifyOtp = async (code: string) => {
     setLoading(true);
@@ -67,50 +71,20 @@ const VerifyVoter = () => {
   };
 
   return (
-    <Box width="container.xl">
-      <VStack>
-        <Box width="fit-content">
-          <FormControl>
-            <FormLabel htmlFor="email">Email address</FormLabel>
-            <Input
-              id="email"
-              type="email"
-              value={email}
-              onChange={handleOnChange}
-            />
-            <FormHelperText>We'll never share your email.</FormHelperText>
-          </FormControl>
-        </Box>
-        <CustomPinField
-          onComplete={verifyOtp}
-          onChange={onPinChange}
-        ></CustomPinField>
-        {!loading ? (
-          // will replace sent Otp with verify otp once the user has received the otp
-          isVerifyCode ? (
-            <Button
-              colorScheme="red"
-              variant="outline"
-              onClick={() => verifyOtp(pin)}
-            >
-              Send code
-            </Button>
-          ) : (
-            <Button
-              colorScheme="red"
-              variant="outline"
-              onClick={() => getOtp()}
-            >
-              VerifyCode
-            </Button>
-          )
-        ) : (
-          <CircularProgress value={30} color="orange.400" thickness="12px" />
-        )}
-
-        <Text>{error}</Text>
-      </VStack>
-    </Box>
+    <Flex height="100vh" alignItems="center" justifyContent="center">
+      <Flex direction="column" bg="gray.900" p={12} rounded={6}>
+        <Heading mb={6}>Let's verify your email</Heading>
+        <Input
+          placeholder="adjei@gmail.com"
+          variant="filled"
+          mb={2}
+          type="email"
+        ></Input>
+        <CustomPinField></CustomPinField>
+        <Button mt={3}>Send Otp</Button>
+        <Button onClick={toggleColorMode}>toggle color</Button>
+      </Flex>
+    </Flex>
   );
 };
 
@@ -118,7 +92,12 @@ const CustomPinField = (props: any) => {
   return (
     <HStack>
       <Box paddingTop="30">
-        <PinInput otp onComplete={props.onComplete} onChange={props.onChange}>
+        <PinInput
+          otp
+          onComplete={props.onComplete}
+          onChange={props.onChange}
+          mask
+        >
           <PinInputField />
           <PinInputField />
           <PinInputField />
