@@ -31,6 +31,13 @@ class ApiFailure{
     }
 }
 
-export { AppStrings, ApiErrors, ApiFailure};
+class UIError {
+    message:string;
+    constructor(message:string){
+        this.message = message;
+    }
+}
+
+export { AppStrings, ApiErrors, ApiFailure, UIError};
 
 
