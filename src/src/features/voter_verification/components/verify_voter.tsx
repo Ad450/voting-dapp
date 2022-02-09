@@ -84,8 +84,6 @@ const performOperation = async () => {
   } catch (error) {}
 };
 
-const getVerificationCode = async (email: string): Promise<void> => {};
-
 export { VerifyVoter };
 
 // get verification code
