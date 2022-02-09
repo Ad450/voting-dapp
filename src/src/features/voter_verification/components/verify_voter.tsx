@@ -10,15 +10,45 @@ import {
   Box,
   Button,
   CircularProgress,
+  Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { AppStrings, UIError } from "../../../core/failures";
+import {
+  verifyCode,
+  getVerificationCode,
+} from "../datasources/remote_datasource";
 
 const VerifyVoter = () => {
-  const [value, setValue] = useState("");
+  const [email, setEmail] = useState("");
   const [isVerifyCode, setIsVerifyCode] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const handleOnChange = (e: any) => setEmail(e.target.value);
 
-  const handleOnChange = (e: any) => setValue(e.target.value);
+  const verifyOtp = async (code: string) => {
+    try {
+      await verifyCode(email, code);
+    } catch (error: unknown) {
+      if (error instanceof UIError) {
+        setError(error.message);
+      } else {
+        setError(AppStrings.apiGenericError);
+      }
+    }
+  };
+
+  const getOtp = async () => {
+    try {
+      await getVerificationCode(email);
+    } catch (error: unknown) {
+      if (error instanceof UIError) {
+        setError(error.message);
+      } else {
+        setError(AppStrings.apiGenericError);
+      }
+    }
+  };
 
   return (
     <Box width="container.xl">
@@ -28,44 +58,36 @@ const VerifyVoter = () => {
           <Input
             id="email"
             type="email"
-            value={value}
+            value={email}
             onChange={handleOnChange}
           />
           <FormHelperText>We'll never share your email.</FormHelperText>
         </FormControl>
-        <CustomPinField></CustomPinField>
+        <CustomPinField onComplete={verifyOtp}></CustomPinField>
         {!loading ? (
           // will replace sent Otp with verify otp once the user has received the otp
           isVerifyCode ? (
-            <Button
-              colorScheme="red"
-              variant="outline"
-              onClick={performOperation}
-            >
-              Verify code
-            </Button>
+            <Box></Box>
           ) : (
-            <Button
-              colorScheme="red"
-              variant="outline"
-              onClick={performOperation}
-            >
+            <Button colorScheme="red" variant="outline" onClick={getOtp}>
               Send code
             </Button>
           )
         ) : (
           <CircularProgress value={30} color="orange.400" thickness="12px" />
         )}
+
+        <Text>{error}</Text>
       </Stack>
     </Box>
   );
 };
 
-const CustomPinField = () => {
+const CustomPinField = (props: any) => {
   return (
     <HStack>
       <Box paddingTop="30">
-        <PinInput otp onComplete={performOperation}>
+        <PinInput otp onComplete={props.onComplete}>
           <PinInputField />
           <PinInputField />
           <PinInputField />
@@ -78,19 +100,4 @@ const CustomPinField = () => {
   );
 };
 
-// this will verify pin
-const performOperation = async () => {
-  try {
-  } catch (error) {}
-};
-
 export { VerifyVoter };
-
-// get verification code
-// https://uenrlibrary.herokuapp.com/api/auth/resend-verification-link
-
-// verify code
-// https://uenrlibrary.herokuapp.com/api/auth/email-verify/$code/$email
-
-// figure out
-// should disable button when loading
