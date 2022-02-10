@@ -1,24 +1,29 @@
-import { ApiFailure, AppStrings, UIError } from "../../../core/failures";
+import { UIError } from "../../../core/failures";
 import NetworkServiceImpl from "../../../core/network/network_service_impl";
 
 const networkService : NetworkServiceImpl =  new NetworkServiceImpl();
 
 
-const getVerificationCode = async(email : string): Promise<void> => {
+const getVerificationCode = async(email : string): Promise<boolean> => {
+  // this will help us decide when its done since we don't need the response
+   let isDone: boolean = false;
    // suppose the email validator fails - won't happen though   
    if((email === '' || email === null)){
       throw new UIError('email cannot be null') 
    }
-   const result  =  await networkService.post('https://uenrlibrary.herokuapp.com/api/auth/resend-verification-links', {'email': email});
+   const result  =  await networkService.post('https://uenrlibrary.herokuapp.com/api/auth/resend-verification-link', {'email': email});
      if(result.has('error')){
     throw new UIError(result.get('error'))   
   }
   else{
-      return;
+      isDone = true;
+      return isDone;
   }
 } 
 
-const verifyCode = async (email:string , code:string)=>{
+const verifyCode = async (email:string , code:string): Promise<boolean>=>{
+   // when isDone, we navigate to vote page
+   let isDone:boolean = false
    if((email === '' || email === null) && (code === '' || code === null)){
       throw new UIError('email cannot be null') 
    }
@@ -27,7 +32,8 @@ const verifyCode = async (email:string , code:string)=>{
     throw new UIError(result.get('error'))   
   }
   else{
-      return;
+     isDone = true;
+      return isDone;
   }
  
 }
