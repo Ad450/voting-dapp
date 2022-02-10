@@ -1,6 +1,6 @@
 import NetworkService from "./network_service";
-import axios, { AxiosResponse } from "axios";
-import {AppStrings, ApiFailure} from '../failures';
+import axios, { AxiosError, AxiosResponse } from "axios";
+import {AppStrings} from '../failures';
 
 
 class NetworkServiceImpl implements NetworkService{
@@ -10,7 +10,8 @@ class NetworkServiceImpl implements NetworkService{
             const result = await axios.get(url);
             return this._handleResponse(result);
         } catch (error) {
-           throw new ApiFailure(error);
+           const castError = error as AxiosError;
+           return this._handleResponse(castError.response!)
         }
     }
    async post(url: string, data: any): Promise<Map<string, any>> {
@@ -19,7 +20,8 @@ class NetworkServiceImpl implements NetworkService{
             const result =await axios.post(url, data);
             return this._handleResponse(result);
         } catch (error) {
-            throw new ApiFailure(error);
+            const castError = error as AxiosError;
+           return this._handleResponse(castError.response!)
         }
     }
 

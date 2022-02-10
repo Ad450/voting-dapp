@@ -19,7 +19,7 @@ abstract class AppStrings{
    static apiGenericError: string = 'please try again';
    static apiBadRequest:  string  = 'invalid credentials';
    static apiConnectionTimeout: string = 'could not make request to the server. Check your network';
-   static apiNotFound :string = 'could not find what you wanted';
+   static apiNotFound :string = 'could not generate otp';
    static apiServerError: string = 'server error, please try again';
    static apiUnknown :string = 'something bad happened, please try again';
 }
