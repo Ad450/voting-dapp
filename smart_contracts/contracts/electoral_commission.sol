@@ -35,4 +35,7 @@ abstract contract EC {
     function getTotalVoteCast() public view virtual returns (uint256);
 
     function voteForParty(string memory _party) external virtual;
+}function getTotalVoteCast() public view virtual returns (uint256);
+
+    function voteForParty(string memory _party) external virtual;
 }
