@@ -1,19 +1,13 @@
 import {
-  FormControl,
-  FormHelperText,
-  FormLabel,
   Input,
   PinInput,
   PinInputField,
-  VStack,
   HStack,
   Box,
   Button,
-  CircularProgress,
   Text,
   Flex,
   Heading,
-  useColorMode,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { AppStrings, UIError } from "../../../core/failures";
@@ -29,16 +23,17 @@ const VerifyVoter = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [pin, setPin] = useState("");
-  const handleOnChange = (e: any) => setEmail(e.target.value);
-  const { toggleColorMode } = useColorMode();
 
-  const verifyOtp = async (code: string) => {
+  const handleOnChange = (e: any) => setEmail(e.target.value);
+
+  const verifyOtp = async (): Promise<void> => {
     setLoading(true);
     try {
-      await verifyCode(email, code);
+      await verifyCode(email, pin);
     } catch (error: unknown) {
       if (error instanceof UIError) {
         setError(error.message);
+        setLoading(false);
       } else {
         setError(AppStrings.apiGenericError);
         setLoading(false);
@@ -46,29 +41,40 @@ const VerifyVoter = () => {
     }
   };
 
-  const getOtp = async () => {
-    if (Validator.validateEmail(email)) {
-      //debugging with prints for now
-      console.log("entered get otp");
+  const getOtp = async (): Promise<void> => {
+    //debugging with prints for now
+    console.log("entered get otp");
+    console.log(email);
 
+    if (Validator.validateEmail(email)) {
       setLoading(true);
       try {
-        await getVerificationCode(email);
-        setIsVerifyCode(true);
+        const result = await getVerificationCode(email);
+        if (result) {
+          setLoading(false);
+          setIsVerifyCode(true);
+
+          alert("an otp code has been sent to your email");
+        }
       } catch (error: unknown) {
         if (error instanceof UIError) {
           setError(error.message);
+          setLoading(false);
         } else {
           setError(AppStrings.apiGenericError);
           setLoading(false);
         }
       }
+    } else {
+      setError("enter a valid email");
     }
   };
 
   const onPinChange = async (value: string) => {
     setPin(value);
   };
+
+  console.log(pin);
 
   return (
     <Flex height="100vh" alignItems="center" justifyContent="center">
@@ -79,10 +85,26 @@ const VerifyVoter = () => {
           variant="filled"
           mb={2}
           type="email"
+          value={email}
+          onChange={handleOnChange}
         ></Input>
-        <CustomPinField></CustomPinField>
-        <Button mt={3}>Send Otp</Button>
-        <Button onClick={toggleColorMode}>toggle color</Button>
+        <CustomPinField onChange={onPinChange}></CustomPinField>
+        {isVerifyCode ? (
+          <Button onClick={verifyOtp}>Verify code</Button>
+        ) : (
+          <Button mt={3} onClick={getOtp}>
+            Send Otp
+          </Button>
+        )}
+        {error ? (
+          <Text mt={2} color="red" fontSize="xl">
+            {error}
+          </Text>
+        ) : (
+          <Text></Text>
+        )}
+
+        {loading ? <Text mt={1}>loading...</Text> : <Text></Text>}
       </Flex>
     </Flex>
   );
@@ -91,7 +113,7 @@ const VerifyVoter = () => {
 const CustomPinField = (props: any) => {
   return (
     <HStack>
-      <Box paddingTop="30">
+      <Box mb={2} mt={2}>
         <PinInput
           otp
           onComplete={props.onComplete}
