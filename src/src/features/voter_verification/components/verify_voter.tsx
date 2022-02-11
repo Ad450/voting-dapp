@@ -10,6 +10,7 @@ import {
   Heading,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AppStrings, UIError } from "../../../core/failures";
 import Validator from "../../../core/utils/validators";
 import {
@@ -23,13 +24,25 @@ const VerifyVoter = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [pin, setPin] = useState("");
+  const [disablePin, setDisablePin] = useState(true);
+
+  const [autoFocusPin, setAutoFocusPin] = useState(false);
+
+  let navigate = useNavigate();
 
   const handleOnChange = (e: any) => setEmail(e.target.value);
+  const onPinChange = (value: string) => setPin(value);
 
   const verifyOtp = async (): Promise<void> => {
+    setError("");
     setLoading(true);
     try {
-      await verifyCode(email, pin);
+      const result = await verifyCode(email, pin);
+      if (result) {
+        setLoading(false);
+        setAutoFocusPin(false);
+        navigate("/voting");
+      }
     } catch (error: unknown) {
       if (error instanceof UIError) {
         setError(error.message);
@@ -55,6 +68,8 @@ const VerifyVoter = () => {
           setIsVerifyCode(true);
 
           alert("an otp code has been sent to your email");
+          setDisablePin(false);
+          setAutoFocusPin(true);
         }
       } catch (error: unknown) {
         if (error instanceof UIError) {
@@ -68,10 +83,6 @@ const VerifyVoter = () => {
     } else {
       setError("enter a valid email");
     }
-  };
-
-  const onPinChange = async (value: string) => {
-    setPin(value);
   };
 
   console.log(pin);
@@ -88,7 +99,13 @@ const VerifyVoter = () => {
           value={email}
           onChange={handleOnChange}
         ></Input>
-        <CustomPinField onChange={onPinChange}></CustomPinField>
+        <CustomPinField
+          onChange={onPinChange}
+          pin={pin}
+          isDisabled={disablePin}
+          autoFocus={autoFocusPin}
+          onComplete={verifyOtp}
+        ></CustomPinField>
         {isVerifyCode ? (
           <Button onClick={verifyOtp}>Verify code</Button>
         ) : (
@@ -110,15 +127,33 @@ const VerifyVoter = () => {
   );
 };
 
-const CustomPinField = (props: any) => {
+type props = {
+  pin: string;
+  isDisabled: boolean;
+  autoFocus: boolean;
+  onChange: (value: string) => void;
+  onComplete: (value: string) => void;
+};
+
+const CustomPinField: React.FC<props> = ({
+  pin,
+  isDisabled,
+  autoFocus,
+  onChange,
+  onComplete,
+}) => {
   return (
     <HStack>
       <Box mb={2} mt={2}>
         <PinInput
           otp
-          onComplete={props.onComplete}
-          onChange={props.onChange}
+          onComplete={onComplete}
+          onChange={onChange}
           mask
+          value={pin}
+          isDisabled={isDisabled}
+          autoFocus={autoFocus}
+          type="alphanumeric"
         >
           <PinInputField />
           <PinInputField />
