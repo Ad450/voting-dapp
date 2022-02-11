@@ -1,3 +1,4 @@
+
 import { UIError } from "../../../core/failures";
 import NetworkServiceImpl from "../../../core/network/network_service_impl";
 
@@ -22,14 +23,14 @@ const getVerificationCode = async(email : string): Promise<boolean> => {
 } 
 
 const verifyCode = async (email:string , code:string): Promise<boolean>=>{
-   // when isDone, we navigate to vote page
+   // help us know what to do next when operation is successful
    let isDone:boolean = false
    if((email === '' || email === null) && (code === '' || code === null)){
       throw new UIError('email cannot be null') 
    }
-   const result  =  await networkService.get(`https://uenrlibrary.herokuapp.com/api/auth/email-verify/${code}/${email}`, {});
+   const result  =  await networkService.get(`https://uenrlibrary.herokuapp.com/api/auth/email-verify/verification-code/${email}/${code}`, {});
    if(result.has('error')){
-    throw new UIError(result.get('error'))   
+    throw new UIError(result.get('error'));
   }
   else{
      isDone = true;
