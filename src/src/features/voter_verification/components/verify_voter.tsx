@@ -58,7 +58,7 @@ const VerifyVoter = () => {
     //debugging with prints for now
     console.log("entered get otp");
     console.log(email);
-
+    setError("");
     if (Validator.validateEmail(email)) {
       setLoading(true);
       try {

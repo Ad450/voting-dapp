@@ -1,7 +1,7 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
 export const Voting = () => (
   <Flex height="100vh" alignItems="center" justifyContent="center">
-    <Text>Voting....</Text>
+    <Flex direction="column" bg="gray.900" p={12} rounded={6}></Flex>
   </Flex>
 );
