@@ -8,6 +8,10 @@ abstract class Validator {
 
     return  this.regex.test(email);
   }
+
+  static validatePin(pin :string):boolean{
+    return pin.length < 6;
+  }
 }
 
 
