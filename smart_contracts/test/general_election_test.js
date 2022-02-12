@@ -9,7 +9,7 @@ contract('general election', ()=>{
      // get properties of deployed GeneralElection contract
         const generalElection = await GeneralElection.deployed();
       
-     // check to see if votes of the party is incremented
+     // check to see if the contract is actually deployed
         assert(generalElection.address !== '')    
     });
 
@@ -23,7 +23,7 @@ contract('general election', ()=>{
       // get the votes of the party above 
       const result = await generalElection.getPartyVotes('DDD');
 
-      // check to see if votes of the party is incremented
+      // check to see if votes of the party is incremented by 1
       assert(result.toString() === "1");
     });
 });
