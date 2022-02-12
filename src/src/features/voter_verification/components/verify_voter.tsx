@@ -35,22 +35,31 @@ const VerifyVoter = () => {
 
   const verifyOtp = async (): Promise<void> => {
     setError("");
-    setLoading(true);
-    try {
-      const result = await verifyCode(email, pin);
-      if (result) {
-        setLoading(false);
-        setAutoFocusPin(false);
-        navigate("/voting");
+    console.log(pin);
+
+    if (Validator.validatePin(pin)) {
+      console.log(pin);
+      setLoading(true);
+      try {
+        const result = await verifyCode(email, pin);
+        if (result) {
+          setLoading(false);
+          setAutoFocusPin(false);
+          navigate("/voting");
+        }
+      } catch (error: unknown) {
+        if (error instanceof UIError) {
+          setError(error.message);
+          setLoading(false);
+          setPin("");
+        } else {
+          setError(AppStrings.apiGenericError);
+          setLoading(false);
+          setPin("");
+        }
       }
-    } catch (error: unknown) {
-      if (error instanceof UIError) {
-        setError(error.message);
-        setLoading(false);
-      } else {
-        setError(AppStrings.apiGenericError);
-        setLoading(false);
-      }
+    } else {
+      setError("invalid pin");
     }
   };
 
