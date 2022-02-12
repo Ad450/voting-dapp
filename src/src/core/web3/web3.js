@@ -23,10 +23,42 @@ const abi  = contractJSON.abi;
 //const address = 
 
 // now we can interact with our contract by calling our getContract
- const getContract = ()=>{
-    const contract  = new web3.eth.Contract(abi);
-    return contract;
+const contract  = new web3.eth.Contract(abi);
+ 
+
+
+// getAllVotes
+
+const getAllVotes = async()=>{
+    try {
+      const votes =  await contract.methods.getTotalVoteCast().call();
+      return votes
+    } catch (error) {
+        console.log(error);
+    }
 }
 
+ // for testing purposes, we default address to first account on ganache
+ const voteForParty = async(party)=>{
+    try {
+        // get first address(account) in ganache
+        const addresses = await web3.eth.getAccounts();
 
+        // call voteForParty in the contract and specify the options, address and gas price
+        await contract.methods.voteForParty(party).send({from :addresses[0] ,gas:3000000 });
 
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+ // get votes of party
+  const getPartyVotes = async(party)=>{
+  
+    try {       
+       const result = await contract.methods.getPartyVotes(party).call();     
+       return result;
+    } catch (error) {
+        console.log(error);      
+    }
+}
