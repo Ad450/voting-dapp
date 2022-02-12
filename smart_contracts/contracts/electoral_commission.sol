@@ -1,4 +1,4 @@
-pragma solidity ^0.8.11;
+pragma solidity ^0.7.1;
 
 // SPDX-License-Identifier: GPL-3.0
 
@@ -33,9 +33,6 @@ abstract contract EC {
         returns (uint256);
 
     function getTotalVoteCast() public view virtual returns (uint256);
-
-    function voteForParty(string memory _party) external virtual;
-}function getTotalVoteCast() public view virtual returns (uint256);
 
     function voteForParty(string memory _party) external virtual;
 }

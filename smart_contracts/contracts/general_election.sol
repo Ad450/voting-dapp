@@ -1,4 +1,4 @@
-pragma solidity ^0.8.11;
+pragma solidity ^0.7.1;
 import "./electoral_commission.sol";
 
 // SPDX-License-Identifier: GPL-3.0
@@ -10,7 +10,7 @@ contract GeneralElection is EC {
     mapping(string => uint256) private partyVotes;
 
     // hasAlreadyVotedError will be thrown when user tries to vote again
-    error HasAlreadyVoted(address who, string message);
+    // error HasAlreadyVoted(address who, string message);
 
     //error HasAlreadyVotedError (string message);
     bool private triggerVoteCountError = false;
@@ -72,10 +72,7 @@ contract GeneralElection is EC {
                 message: "Thank you, vote recorded successfuly"
             });
         } else {
-            revert HasAlreadyVoted({
-                who: voter.voterId,
-                message: "You have already voted"
-            });
+            revert("You have already voted");
         }
     }
 }
