@@ -10,7 +10,7 @@ abstract class Validator {
   }
 
   static validatePin(pin :string):boolean{
-    return pin.length < 6;
+    return pin.length >= 6;
   }
 }
 
