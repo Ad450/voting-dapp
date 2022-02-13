@@ -9,6 +9,7 @@ import {
   Flex,
   Heading,
 } from "@chakra-ui/react";
+import { assert } from "console";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppStrings, UIError } from "../../../core/failures";
@@ -38,7 +39,6 @@ const VerifyVoter = () => {
     console.log(pin);
 
     if (Validator.validatePin(pin)) {
-      console.log(pin);
       setLoading(true);
       try {
         const result = await verifyCode(email, pin);
@@ -59,7 +59,7 @@ const VerifyVoter = () => {
         }
       }
     } else {
-      setError("invalid pin");
+      setError("incomplete pin");
     }
   };
 
@@ -131,6 +131,7 @@ const VerifyVoter = () => {
         )}
 
         {loading ? <Text mt={1}>loading...</Text> : <Text></Text>}
+        <Button onClick={() => navigate("/voting")}>voting</Button>
       </Flex>
     </Flex>
   );
